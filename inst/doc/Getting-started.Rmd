@@ -1,0 +1,175 @@
+---
+title: "Getting-started"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting-started}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Setup and Requirements  
+
+```{r setup}
+library(cercospoRa)
+library(data.table)
+```
+
+The `cercospoRa` package estimates the daily infection values which tracks the 
+progress towards a *Cercospora beticola* epidemic on sugar beet.
+The package requires formatted hourly weather data in a format which the model 
+recognises.
+
+### Format weather station data  
+
+Included in the package is a weather data set from a station adjacent to a sugar 
+beet field trial.  
+
+The weather data is first cleaned into to a format that the model can use without 
+returning errors due to inconsistencies and `NAs`, which are common in weather data. 
+This will require the user to think about how to replace the `NAs` or state default
+values to complete the data set.  
+
+```{r prep_wdata}
+# classify to data.table
+wthr <- data.table(weathr)
+
+# Use POSIXct formatted time.
+wthr[,Time := as.POSIXct(paste0(Datum, " ",Stunde,":00"),tz = "UTC")]
+
+# Nominate Latitude and Longitude location of the weather station. 
+# While not needed in cercospoRa some plant disease models will use location to 
+#  decide the closest weather station to pull weather from
+wthr[, c("lon","lat") := list(9.916,51.41866)]
+
+# weather is hourly and will error if we don't specify a standard deviation of 
+#  weather direction. This is intentional to force the user to decide how variable
+#  the wind direction data could be.
+wthr[, wd_std := 20]
+
+# remove all data after September as it contains missing data
+wthr <- wthr[Datum < as.POSIXct("2022-10-01")]
+
+# set NA wind speed values to zero
+wthr[is.na(WG200), WG200 := 0]
+
+# set NA wind direction values to 20 degrees. 
+#  Wind is not important for this model
+wthr[is.na(WR200),WR200 := 20]
+```
+
+Now we can use the `format_weather()` function.  
+
+```{r format_wdata}
+wthr <- format_weather(wthr,
+                         POSIXct_time = "Time",
+                         time_zone = "UTC",
+                         temp = "T200",
+                         rain = "N100",
+                         rh = "F200",
+                         wd = "WR200",
+                         ws = "WG200",
+                         station = "Station",
+                         lon = "lon",
+                         lat = "lat",
+                         wd_sd = "wd_std",
+                         data_check = FALSE # this stops the function from checking for faults
+                         )
+# As the data is formatted closely enough for what is expected for the model. 
+# We can elect to turn the data_check off so 
+```
+
+
+## Calculate epidemic onset  
+
+The following function calculates the earliest date from which a cercospora leaf
+spot epidemic could commence. 
+`start` and `end` provide the time window for which the model should run.
+Canopy closure (`c_closure`) indicates when the model should start point for the 
+model.
+This is due to an observation by Wolf canopy closure pr
+
+This date is determined by the negative prognosis models to be the last day for 
+which a epidemic is likely not to start.  
+
+```{r}
+cercospoRa::calc_epidemic_onset(start = as.POSIXct("2022-04-25",tz = "UTC"),
+                    end = as.POSIXct("2022-09-30",tz = "UTC"),
+                    c_closure = as.POSIXct("2022-07-01",tz = "UTC"),
+                    weather = wthr)
+```
+
+
+## Estimate canopy closure  
+
+Canopy closure is traditionally observed manually. 
+The following methods permits canopy closure date estimation from remotely sensed
+data.
+UAV or satellite data can be used to produce georeferenced leaf area index (LAI)
+rasters. 
+
+```{r}
+# Get file location of example rasters with LAI values
+image_files <- list.files(system.file("extdata", "uav_img",package = "cercospoRa"),
+                          pattern = "tif",
+                          full.names = TRUE)
+
+# Read in data and check for consistency  
+epidemic_onset_param <-
+  read_sb_growth_parameter(img_files = image_files,
+                           img_dates = as.POSIXct(c("2022-06-14","2022-06-28"),
+                                                  tz = "UTC"),
+                           target_res = 10)
+
+epidemic_onset_param
+```
+
+The next function calculates the sugar beet growth rate. 
+
+```{r}
+param_rxt <- calc_r_x0(epidemic_onset_param,
+                      min_r = 0.02,
+                      max_r = 0.05,
+                      k = 6)
+```
+
+Calculate canopy closure uses a logistic regression to estimate the canopy closure 
+date for each raster cell.
+
+```{r}
+canopy_closure <- calc_c_closure(param_rxt,
+                                 x1 = 1.3,
+                                 k=6)
+```
+
+Finally we can use a specialised wrapper function to calculate the earliest possible
+onset of a cercospora leaf spot epidemic when chemical intervention might be needed.
+
+```{r}
+epidemic_onset_map <- 
+  calc_epidemic_onset_from_image(start =as.POSIXct("2022-04-25",tz = "UTC"),
+                                 end = as.POSIXct("2022-09-30",tz = "UTC"),
+                                 c_closure = canopy_closure,
+                                 weather = wthr)
+epidemic_onset_map
+```
+
+plot the heterogeneity of onset date
+
+```{r}
+terra::plot(epidemic_onset_map)
+```
+
+Convert numeric date back to POSIXct format
+```{r}
+as.POSIXct(terra::values(epidemic_onset_map)[120:130],
+           tz = "UTC",
+           origin = "1970-01-01")
+```
+

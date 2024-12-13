@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Getting-started</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Getting-started</h1>
+
+
+
+<div id="setup-and-requirements" class="section level2">
+<h2>Setup and Requirements</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(cercospoRa)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(data.table)</span></code></pre></div>
+<p>The <code>cercospoRa</code> package estimates the daily infection
+values which tracks the progress towards a <em>Cercospora beticola</em>
+epidemic on sugar beet. The package requires formatted hourly weather
+data in a format which the model recognises.</p>
+<div id="format-weather-station-data" class="section level3">
+<h3>Format weather station data</h3>
+<p>Included in the package is a weather data set from a station adjacent
+to a sugar beet field trial.</p>
+<p>The weather data is first cleaned into to a format that the model can
+use without returning errors due to inconsistencies and
+<code>NAs</code>, which are common in weather data. This will require
+the user to think about how to replace the <code>NAs</code> or state
+default values to complete the data set.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># classify to data.table</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>wthr <span class="ot">&lt;-</span> <span class="fu">data.table</span>(weathr)</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co"># Use POSIXct formatted time.</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>wthr[,Time <span class="sc">:=</span> <span class="fu">as.POSIXct</span>(<span class="fu">paste0</span>(Datum, <span class="st">&quot; &quot;</span>,Stunde,<span class="st">&quot;:00&quot;</span>),<span class="at">tz =</span> <span class="st">&quot;UTC&quot;</span>)]</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co"># Nominate Latitude and Longitude location of the weather station. </span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co"># While not needed in cercospoRa some plant disease models will use location to </span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co">#  decide the closest weather station to pull weather from</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>wthr[, <span class="fu">c</span>(<span class="st">&quot;lon&quot;</span>,<span class="st">&quot;lat&quot;</span>) <span class="sc">:=</span> <span class="fu">list</span>(<span class="fl">9.916</span>,<span class="fl">51.41866</span>)]</span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co"># weather is hourly and will error if we don&#39;t specify a standard deviation of </span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co">#  weather direction. This is intentional to force the user to decide how variable</span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="co">#  the wind direction data could be.</span></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a>wthr[, wd_std <span class="sc">:=</span> <span class="dv">20</span>]</span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="co"># remove all data after September as it contains missing data</span></span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a>wthr <span class="ot">&lt;-</span> wthr[Datum <span class="sc">&lt;</span> <span class="fu">as.POSIXct</span>(<span class="st">&quot;2022-10-01&quot;</span>)]</span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="co"># set NA wind speed values to zero</span></span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a>wthr[<span class="fu">is.na</span>(WG200), WG200 <span class="sc">:=</span> <span class="dv">0</span>]</span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a><span class="co"># set NA wind direction values to 20 degrees. </span></span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a><span class="co">#  Wind is not important for this model</span></span>
+<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a>wthr[<span class="fu">is.na</span>(WR200),WR200 <span class="sc">:=</span> <span class="dv">20</span>]</span>
+<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a><span class="co">#&gt; Warning in `[.data.table`(wthr, is.na(WR200), `:=`(WR200, 20)): 20.000000 (type</span></span>
+<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a><span class="co">#&gt; &#39;double&#39;) at RHS position 1 taken as TRUE when assigning to type &#39;logical&#39;</span></span>
+<span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a><span class="co">#&gt; (column 10 named &#39;WR200&#39;)</span></span></code></pre></div>
+<p>Now we can use the <code>format_weather()</code> function.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>wthr <span class="ot">&lt;-</span> <span class="fu">format_weather</span>(wthr,</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>                         <span class="at">POSIXct_time =</span> <span class="st">&quot;Time&quot;</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>                         <span class="at">time_zone =</span> <span class="st">&quot;UTC&quot;</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>                         <span class="at">temp =</span> <span class="st">&quot;T200&quot;</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>                         <span class="at">rain =</span> <span class="st">&quot;N100&quot;</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>                         <span class="at">rh =</span> <span class="st">&quot;F200&quot;</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>                         <span class="at">wd =</span> <span class="st">&quot;WR200&quot;</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>                         <span class="at">ws =</span> <span class="st">&quot;WG200&quot;</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>                         <span class="at">station =</span> <span class="st">&quot;Station&quot;</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>                         <span class="at">lon =</span> <span class="st">&quot;lon&quot;</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>                         <span class="at">lat =</span> <span class="st">&quot;lat&quot;</span>,</span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a>                         <span class="at">wd_sd =</span> <span class="st">&quot;wd_std&quot;</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a>                         <span class="at">data_check =</span> <span class="cn">FALSE</span> <span class="co"># this stops the function from checking for faults</span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a>                         )</span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co"># As the data is formatted closely enough for what is expected for the model. </span></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co"># We can elect to turn the data_check off so </span></span></code></pre></div>
+</div>
+</div>
+<div id="calculate-epidemic-onset" class="section level2">
+<h2>Calculate epidemic onset</h2>
+<p>The following function calculates the earliest date from which a
+cercospora leaf spot epidemic could commence. <code>start</code> and
+<code>end</code> provide the time window for which the model should run.
+Canopy closure (<code>c_closure</code>) indicates when the model should
+start point for the model. This is due to an observation by Wolf canopy
+closure pr</p>
+<p>This date is determined by the negative prognosis models to be the
+last day for which a epidemic is likely not to start.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>cercospoRa<span class="sc">::</span><span class="fu">calc_epidemic_onset</span>(<span class="at">start =</span> <span class="fu">as.POSIXct</span>(<span class="st">&quot;2022-04-25&quot;</span>,<span class="at">tz =</span> <span class="st">&quot;UTC&quot;</span>),</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>                    <span class="at">end =</span> <span class="fu">as.POSIXct</span>(<span class="st">&quot;2022-09-30&quot;</span>,<span class="at">tz =</span> <span class="st">&quot;UTC&quot;</span>),</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>                    <span class="at">c_closure =</span> <span class="fu">as.POSIXct</span>(<span class="st">&quot;2022-07-01&quot;</span>,<span class="at">tz =</span> <span class="st">&quot;UTC&quot;</span>),</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>                    <span class="at">weather =</span> wthr)</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="co">#&gt; [1] &quot;2022-07-17 UTC&quot;</span></span></code></pre></div>
+</div>
+<div id="estimate-canopy-closure" class="section level2">
+<h2>Estimate canopy closure</h2>
+<p>Canopy closure is traditionally observed manually. The following
+methods permits canopy closure date estimation from remotely sensed
+data. UAV or satellite data can be used to produce georeferenced leaf
+area index (LAI) rasters.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="co"># Get file location of example rasters with LAI values</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>image_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;uav_img&quot;</span>,<span class="at">package =</span> <span class="st">&quot;cercospoRa&quot;</span>),</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>                          <span class="at">pattern =</span> <span class="st">&quot;tif&quot;</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>                          <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="co"># Read in data and check for consistency  </span></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>epidemic_onset_param <span class="ot">&lt;-</span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>  <span class="fu">read_sb_growth_parameter</span>(<span class="at">img_files =</span> image_files,</span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>                           <span class="at">img_dates =</span> <span class="fu">as.POSIXct</span>(<span class="fu">c</span>(<span class="st">&quot;2022-06-14&quot;</span>,<span class="st">&quot;2022-06-28&quot;</span>),</span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>                                                  <span class="at">tz =</span> <span class="st">&quot;UTC&quot;</span>),</span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>                           <span class="at">target_res =</span> <span class="dv">10</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a>epidemic_onset_param</span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co">#&gt; class       : SpatRaster </span></span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co">#&gt; dimensions  : 17, 29, 2  (nrow, ncol, nlyr)</span></span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co">#&gt; resolution  : 0.0001103147, 6.885404e-05  (x, y)</span></span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="co">#&gt; extent      : 9.915826, 9.919025, 51.49783, 51.499  (xmin, xmax, ymin, ymax)</span></span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a><span class="co">#&gt; coord. ref. : lon/lat WGS 84 (EPSG:4326) </span></span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a><span class="co">#&gt; source(s)   : memory</span></span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="co">#&gt; names       : 2022-06-14, 2022-06-28 </span></span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a><span class="co">#&gt; min values  :  0.5216454,  0.8607956 </span></span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a><span class="co">#&gt; max values  :  2.9568495,  3.3260000</span></span></code></pre></div>
+<p>The next function calculates the sugar beet growth rate.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>param_rxt <span class="ot">&lt;-</span> <span class="fu">calc_r_x0</span>(epidemic_onset_param,</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>                      <span class="at">min_r =</span> <span class="fl">0.02</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>                      <span class="at">max_r =</span> <span class="fl">0.05</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>                      <span class="at">k =</span> <span class="dv">6</span>)</span></code></pre></div>
+<p>Calculate canopy closure uses a logistic regression to estimate the
+canopy closure date for each raster cell.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>canopy_closure <span class="ot">&lt;-</span> <span class="fu">calc_c_closure</span>(param_rxt,</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>                                 <span class="at">x1 =</span> <span class="fl">1.3</span>,</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>                                 <span class="at">k=</span><span class="dv">6</span>)</span></code></pre></div>
+<p>Finally we can use a specialised wrapper function to calculate the
+earliest possible onset of a cercospora leaf spot epidemic when chemical
+intervention might be needed.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>epidemic_onset_map <span class="ot">&lt;-</span> </span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>  <span class="fu">calc_epidemic_onset_from_image</span>(<span class="at">start =</span><span class="fu">as.POSIXct</span>(<span class="st">&quot;2022-04-25&quot;</span>,<span class="at">tz =</span> <span class="st">&quot;UTC&quot;</span>),</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>                                 <span class="at">end =</span> <span class="fu">as.POSIXct</span>(<span class="st">&quot;2022-09-30&quot;</span>,<span class="at">tz =</span> <span class="st">&quot;UTC&quot;</span>),</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>                                 <span class="at">c_closure =</span> canopy_closure,</span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>                                 <span class="at">weather =</span> wthr)</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>epidemic_onset_map</span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="co">#&gt; class       : SpatRaster </span></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="co">#&gt; dimensions  : 17, 29, 1  (nrow, ncol, nlyr)</span></span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="co">#&gt; resolution  : 0.0001103147, 6.885404e-05  (x, y)</span></span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a><span class="co">#&gt; extent      : 9.915826, 9.919025, 51.49783, 51.499  (xmin, xmax, ymin, ymax)</span></span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a><span class="co">#&gt; coord. ref. : lon/lat WGS 84 (EPSG:4326) </span></span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a><span class="co">#&gt; source(s)   : memory</span></span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a><span class="co">#&gt; name        :      lyr.1 </span></span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a><span class="co">#&gt; min value   : 1653350400 </span></span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a><span class="co">#&gt; max value   : 1659312000</span></span></code></pre></div>
+<p>plot the heterogeneity of onset date</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>terra<span class="sc">::</span><span class="fu">plot</span>(epidemic_onset_map)</span></code></pre></div>
+<p><img role="img" src="data:image/png;base64,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" /><!-- --></p>
+<p>Convert numeric date back to POSIXct format</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">as.POSIXct</span>(terra<span class="sc">::</span><span class="fu">values</span>(epidemic_onset_map)[<span class="dv">120</span><span class="sc">:</span><span class="dv">130</span>],</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>           <span class="at">tz =</span> <span class="st">&quot;UTC&quot;</span>,</span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>           <span class="at">origin =</span> <span class="st">&quot;1970-01-01&quot;</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="co">#&gt;  [1] &quot;2022-07-22 UTC&quot; &quot;2022-07-22 UTC&quot; &quot;2022-07-22 UTC&quot; &quot;2022-07-21 UTC&quot;</span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="co">#&gt;  [5] &quot;2022-07-14 UTC&quot; &quot;2022-07-14 UTC&quot; &quot;2022-07-09 UTC&quot; &quot;2022-07-08 UTC&quot;</span></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="co">#&gt;  [9] &quot;2022-07-09 UTC&quot; &quot;2022-07-11 UTC&quot; &quot;2022-07-11 UTC&quot;</span></span></code></pre></div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
