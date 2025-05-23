@@ -4,13 +4,7 @@
 \alias{calc_epidemic_onset_from_image}
 \title{Calculate epidemic onset from image}
 \usage{
-calc_epidemic_onset_from_image(
-  start,
-  end,
-  c_closure,
-  weather,
-  cultivar_sus = 5
-)
+calc_epidemic_onset_from_image(start, end, cc_r, weather, cultivar_sus = 5)
 }
 \arguments{
 \item{start}{POSIXct, start date in which to begin calculating the epidemic
@@ -19,8 +13,9 @@ onset, if not specified, the first date in the weather data will be used.}
 \item{end}{POSIXct, end date, last date to complete calculating the epidemic
 onset, if not specified, the last date in the weather data will be used.}
 
-\item{c_closure}{map of canopy closure dates formatted as number of days since
-1970-01-01. It defines the date to start running the model (Wolf)}
+\item{cc_r}{spatRast map of canopy closure dates formatted an integer
+of days since 1970-01-01.
+It defines the date to start running the model (Wolf)}
 
 \item{weather}{data.table, formatted with \code{\link{format_weather}}}
 
@@ -53,13 +48,13 @@ param_rxt <- calc_r_x0(epidemic_onset_param,
                        min_r = 0.02,
                        max_r = 0.05,
                        k = 6)
-c_closure <- calc_c_closure(param_rxt,
-                            x1 = 1.3,
-                            k=6 )
+c_closure_map <- calc_c_closure(param_rxt,
+                                x1 = 1.3,
+                                k=6 )
 \donttest{ # this takes about 20 sec to run
 epidemic_onset_map <- calc_epidemic_onset_from_image(start = as.POSIXct("2022-04-25",tz = "UTC"),
                                                      end = as.POSIXct("2022-09-30",tz = "UTC"),
-                                                     c_closure = c_closure,
+                                                     cc_r = c_closure_map,
                                                      weather = wethr)
 
 terra::plot(epidemic_onset_map)

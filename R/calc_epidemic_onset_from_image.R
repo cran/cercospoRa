@@ -4,8 +4,9 @@
 #'  onset, if not specified, the first date in the weather data will be used.
 #' @param end POSIXct, end date, last date to complete calculating the epidemic
 #'  onset, if not specified, the last date in the weather data will be used.
-#' @param c_closure map of canopy closure dates formatted as number of days since
-#' 1970-01-01. It defines the date to start running the model (Wolf)
+#' @param cc_r spatRast map of canopy closure dates formatted an integer
+#' of days since 1970-01-01.
+#' It defines the date to start running the model (Wolf)
 #' @param weather data.table, formatted with \code{\link{format_weather}}
 #' @param cultivar_sus character, susceptibility of the cultivar in "R" resistant,
 #'  "S" susceptible, "MR" moderately resistant etc.
@@ -33,25 +34,25 @@
 #'                        min_r = 0.02,
 #'                        max_r = 0.05,
 #'                        k = 6)
-#' c_closure <- calc_c_closure(param_rxt,
-#'                             x1 = 1.3,
-#'                             k=6 )
+#' c_closure_map <- calc_c_closure(param_rxt,
+#'                                 x1 = 1.3,
+#'                                 k=6 )
 #'\donttest{ # this takes about 20 sec to run
 #' epidemic_onset_map <- calc_epidemic_onset_from_image(start = as.POSIXct("2022-04-25",tz = "UTC"),
 #'                                                      end = as.POSIXct("2022-09-30",tz = "UTC"),
-#'                                                      c_closure = c_closure,
+#'                                                      cc_r = c_closure_map,
 #'                                                      weather = wethr)
 #'
 #' terra::plot(epidemic_onset_map)
 #' }
 calc_epidemic_onset_from_image <- function(start,
                                            end,
-                                           c_closure,
+                                           cc_r,
                                            weather,
                                            cultivar_sus = 5){
   # initialise onset raster
 
-  Ep_onset <- terra::app(x = c_closure,
+  Ep_onset <- terra::app(x = cc_r,
                         calc_r_onset,
                         start = start,
                         end = end,
@@ -74,7 +75,6 @@ calc_epidemic_onset_from_image <- function(start,
 #' @return SpatRaster with integer values representing days since origin "1970-01-01"
 #' @noRd
 calc_r_onset <- function(r, ...){
-  #cat(r," | ")
   c_closure_date <- as.Date.numeric(round(r),
                                     origin = '1970-01-01')
   onset_epidemic_date <- calc_epidemic_onset(c_closure = c_closure_date, ...)

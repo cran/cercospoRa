@@ -1,7 +1,7 @@
 #' Format weather data into a standardised format.
 #'
 #' Formats raw weather data into an object suitable for use in the affiliated
-#'  spore dispersal packages such as `ascotraceR` and `blackspot.sp`. This
+#'  spore dispersal packages such as `ascotraceR`. This
 #'  standardised data format ensures that the supplied weather data meet the
 #'  requirements for functions in the aforementioned packages. Input weather
 #'  data expects a 'long' data format, where each line is an observation at

@@ -17,8 +17,8 @@
 #'  This value can be cultivar-dependent. The default is fixed to 6
 #'
 #' @return param_rxt: list containing parameters that are necessary to calculate
-#'  \code{c_closure}. These parameters are \code{r}, the growth rate, \code{x0},
-#'  the initial LAI value, and \code{t0}, the initial date.
+#'  canopy closure dates. These parameters are \code{r}, the growth rate;
+#'  \code{x0}, the initial LAI value; and \code{t0}, the initial date.
 #'
 #' @export
 #'

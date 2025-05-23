@@ -7,20 +7,24 @@
 calc_c_closure(param_rxt, x1 = 1.3, k = 6)
 }
 \arguments{
-\item{param_rxt}{Output of the function \link{calc_r_x0}, which produces a
-list containing parameters that are necessary to calculate \code{c_closure}.
+\item{param_rxt}{\code{SpatRast}, output of the function
+\link{calc_r_x0}, which produces a \code{SpatRast} list containing
+parameters that are necessary to calculate canopy closure.
 These parameters are \code{r}, the growth rate, \code{x0}, the initial LAI
 value, and \code{t0}, the initial date and the associated dates}
 
-\item{x1}{LAI value at which 90\% canopy closure is reached. It is fixed to
-1.3 for sugar beet.}
+\item{x1}{numeric, LAI value at which 90\% canopy closure is reached. The
+default is set to 1.3 for sugar beet.}
 
 \item{k}{carrying capacity, which is the maximum LAI that can be attained.
-This value can be cultivar-dependent. The default is fixed to 6}
+This value can be cultivar-dependent. The default is set to 6}
 }
 \value{
-\code{c_closure} date at which 90\% canopy closure is reached at each
-location.
+\code{SpatRast} where the values
+represent day where canopy closure occurred as an integer from the time
+origin \code{"1970-01-01"}.
+The canopy closure date is reached when 90\% canopy closure has occurred for
+the specified location, in this case the pixel.
 }
 \description{
 Calculate canopy closure date
@@ -40,7 +44,7 @@ param_rxt <- calc_r_x0(epidemic_onset_param,
                        min_r = 0.02,
                        max_r = 0.05,
                        k = 6)
-c_closure <- calc_c_closure(param_rxt,
-                            x1 = 1.3,
-                            k=6 )
+canopy_closure <- calc_c_closure(param_rxt,
+                                 x1 = 1.3,
+                                 k=6 )
 }

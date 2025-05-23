@@ -30,36 +30,32 @@ test_that("Relative humidity formats",{
 })
 
 test_that("epidemic onset produces expected outcome", {
-  bris_formated <- format_weather(
-    w = brisvegas,
-    POSIXct_time = "aifstime_utc",
-    time_zone = "UTC",
-    temp = "air_temp",
-    rh = "rel_hum",
-    rain = "rain_trace",
-    ws = "wind_spd_kmh",
-    wd = "wind_dir_deg",
-    station = "name",
-    lon = "lon",
-    lat = "lat",
-    data_check = c("temp","rain")
-  )
-  bris_formated[,rh := fifelse(is.na(rh),shift(rh,n=24,type = "lag"),
-                               rh)]
+
+  wethr <- read.csv(system.file("extdata", "clean_weather.csv",
+                    package = "cercospoRa"))
+  wethr <- format_weather(wethr,time_zone = "UTC")
+
 
   # susceptible cultivar
-  sus_out <- calc_epidemic_onset(c_closure = as.POSIXct("2023-06-01", tz = "UTC"),
-                      weather = bris_formated,
-                      cultivar_sus = 3)
+  sus_out <- calc_epidemic_onset(c_closure = as.POSIXct("2022-06-01", tz = "UTC"),
+                      weather = wethr,
+                      cultivar_sus = 6)
   expect_type(sus_out,"double")
-  expect_equal(sus_out, as.POSIXct("2023-06-07",tz = "UTC"))
+  expect_equal(sus_out, as.POSIXct("2022-06-24",tz = "UTC"))
 
   # resistant cultivar
-  res_out <- calc_epidemic_onset(c_closure = as.POSIXct("2023-06-01", tz = "UTC"),
-                      weather = bris_formated,
-                      cultivar_sus = 5)
+  res_out <- calc_epidemic_onset(c_closure = as.POSIXct("2022-06-01", tz = "UTC"),
+                      weather = wethr,
+                      cultivar_sus = 4)
   expect_type(res_out,"double")
-  expect_equal(res_out, as.POSIXct("2023-06-17",tz = "UTC"),tolerance = 0.0000001)
+  expect_equal(res_out, as.POSIXct("2022-07-13",tz = "UTC"),tolerance = 0.0000001)
+
+  expect_true(res_out > sus_out)
+
+  # resistant cultivar
+  expect_warning(calc_epidemic_onset(c_closure = as.POSIXct("2022-06-01", tz = "UTC"),
+                                 weather = wethr[times < as.POSIXct("2022-07-01", tz = "UTC")],
+                                 cultivar_sus = 1))
 
 })
 
@@ -102,19 +98,49 @@ test_that("different start dates provide different epidemic dates",{
                                c_closure = as.POSIXct("2022-05-01",tz = "UTC")+
                                  (i*3*86400), # 86400 is the number of seconds in a day
                                weather = w_dat,
-                               cultivar_sus = 3)
+                               cultivar_sus = 5)
 
     out2 <- c(out2,as.character(out))
 
   }
 
-  expect_equal(out2, c("2022-05-20", "2022-05-21", "2022-05-22", "2022-05-24",
-                       "2022-05-25", "2022-05-31", "2022-06-06", "2022-06-08",
-                       "2022-06-09", "2022-06-11", "2022-06-12", "2022-06-17",
-                       "2022-06-22", "2022-06-25", "2022-06-26", "2022-06-27",
-                       "2022-06-30", "2022-07-01", "2022-07-07", "2022-07-09",
-                       "2022-07-11", "2022-07-13", "2022-07-20", "2022-07-23",
-                       "2022-07-26", "2022-07-26", "2022-07-29", "2022-08-01",
-                       "2022-08-03", "2022-08-05"))
+  expect_equal(out2, c('2022-06-09', '2022-06-10', '2022-06-12', '2022-06-14',
+                       '2022-06-16', '2022-06-20', '2022-06-25', '2022-06-27',
+                       '2022-06-28', '2022-06-29', '2022-06-30', '2022-07-02',
+                       '2022-07-07', '2022-07-09', '2022-07-11', '2022-07-11',
+                       '2022-07-14', '2022-07-18', '2022-07-22', '2022-07-25',
+                       '2022-07-30', '2022-07-30', '2022-08-01', '2022-08-05',
+                       '2022-08-09', '2022-08-11', '2022-08-14', '2022-08-18',
+                       '2022-08-19', '2022-08-20'))
+
 })
 
+test_that("susceptibility calculator",{
+
+  expect_equal(calc_susceptibility(4),12.4724)
+
+  expect_equal(calc_susceptibility(3),17.1155)
+  expect_equal(calc_susceptibility(5),7.8293)
+
+  expect_equal(calc_susceptibility(2),19.038735)
+  expect_equal(calc_susceptibility(6),5.906065)
+
+  expect_equal(calc_susceptibility(1),20.51449, tolerance = 0.00001)
+  expect_equal(calc_susceptibility(7),4.430315, tolerance = 0.00001)
+
+  expect_equal(calc_susceptibility(8),3.1862, tolerance = 0.00001)
+  expect_equal(calc_susceptibility(9),2.090113, tolerance = 0.00001)
+
+  # check it errors
+  expect_error(calc_susceptibility(10))
+  expect_error(calc_susceptibility(0))
+
+  # test it converts real numbers
+  expect_equal(calc_susceptibility(4.235), 10.22157, tolerance = 0.00001)
+
+  # plot(y = sapply(seq(1,9,0.02), calc_susceptibility),
+  #      x = seq(1,9,0.02),
+  #      ylim = c(0,20),ylab = "cDIV",
+  #      xlab = "Susceptibility rating")
+
+})

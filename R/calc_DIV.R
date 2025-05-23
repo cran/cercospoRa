@@ -11,6 +11,8 @@
 #' @param rain numeric, volume of rain in millimetres recorded between time recordings
 #' @param dat data.frame, containing column names "times","temp","rh","rain" with
 #'  each of the respective arguments for input. provided as a convenience
+#' @param rh_threshold numeric relative humidity threshold for what meets the
+#'  moisture threshold, default is 70%
 #'
 #' @return data.table, with probability of infection for each day, between 0 and 1
 #'  Undertaken with two methods by Wolf and Verreet (2005)
@@ -37,7 +39,7 @@
 #' RH = RH,
 #' rain = rain
 #' )
-calc_DIV <- function(date_time, Tm,RH, rain,dat){
+calc_DIV <- function(date_time, Tm, RH, rain, dat, rh_threshold = 70) {
   # declare non-globals
   times <- temp <- rh <- Tm_index <- moist_ind <- s_rate <- inf_rate <- NULL
 
@@ -73,7 +75,7 @@ calc_DIV <- function(date_time, Tm,RH, rain,dat){
 
   dat[, c("Tm_index",
           "moist_ind") := list(temperature_index(temp),
-                              moisture_index(rh,rain,70))]
+                              moisture_index(rh,rain,rh_threshold))]
 
   DIV <- dat[, list(DIV = round(mean(fifelse(test = Tm_index == 0 | moist_ind == 0,
                                   yes = 0, no = Tm_index * moist_ind)),digits = 7)),

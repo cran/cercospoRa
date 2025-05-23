@@ -19,6 +19,9 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(cercospoRa)
 library(data.table)
+library(terra)
+library(sf)
+library(ggplot2)
 ```
 
 The `cercospoRa` package estimates the daily infection values which tracks the 
@@ -58,10 +61,6 @@ wthr <- wthr[Datum < as.POSIXct("2022-10-01")]
 
 # set NA wind speed values to zero
 wthr[is.na(WG200), WG200 := 0]
-
-# set NA wind direction values to 20 degrees. 
-#  Wind is not important for this model
-wthr[is.na(WR200),WR200 := 20]
 ```
 
 Now we can use the `format_weather()` function.  
@@ -101,8 +100,9 @@ which a epidemic is likely not to start.
 ```{r}
 cercospoRa::calc_epidemic_onset(start = as.POSIXct("2022-04-25",tz = "UTC"),
                     end = as.POSIXct("2022-09-30",tz = "UTC"),
-                    c_closure = as.POSIXct("2022-07-01",tz = "UTC"),
-                    weather = wthr)
+                    c_closure = as.POSIXct("2022-07-30",tz = "UTC"),
+                    weather = wthr,
+                    cultivar_sus = 6)
 ```
 
 
@@ -112,7 +112,7 @@ Canopy closure is traditionally observed manually.
 The following methods permits canopy closure date estimation from remotely sensed
 data.
 UAV or satellite data can be used to produce georeferenced leaf area index (LAI)
-rasters. 
+rasters.  
 
 ```{r}
 # Get file location of example rasters with LAI values
@@ -127,10 +127,13 @@ epidemic_onset_param <-
                                                   tz = "UTC"),
                            target_res = 10)
 
-epidemic_onset_param
+terra::plot(epidemic_onset_param)
 ```
 
-The next function calculates the sugar beet growth rate. 
+## Calculate growth rate  
+
+`calc_r_x0` calculates the sugar beet growth rate based on a minimum of two 
+images.  
 
 ```{r}
 param_rxt <- calc_r_x0(epidemic_onset_param,
@@ -139,37 +142,60 @@ param_rxt <- calc_r_x0(epidemic_onset_param,
                       k = 6)
 ```
 
+## Calculate canopy closure dates  
 Calculate canopy closure uses a logistic regression to estimate the canopy closure 
-date for each raster cell.
+date for each raster cell.  
 
 ```{r}
 canopy_closure <- calc_c_closure(param_rxt,
                                  x1 = 1.3,
                                  k=6)
+terra::plot(canopy_closure)
 ```
 
-Finally we can use a specialised wrapper function to calculate the earliest possible
-onset of a cercospora leaf spot epidemic when chemical intervention might be needed.
+Finally we can use a specialised wrapper function to calculate the earliest 
+estimated cercospora leaf spot epidemic onset dates when chemical intervention 
+might be needed.  
 
 ```{r}
 epidemic_onset_map <- 
   calc_epidemic_onset_from_image(start =as.POSIXct("2022-04-25",tz = "UTC"),
                                  end = as.POSIXct("2022-09-30",tz = "UTC"),
-                                 c_closure = canopy_closure,
-                                 weather = wthr)
+                                 cc_r = canopy_closure,
+                                 weather = wthr,
+                                 cultivar_sus = 6)
 epidemic_onset_map
 ```
 
-plot the heterogeneity of onset date
+Plot the heterogeneity of onset date  
 
 ```{r}
 terra::plot(epidemic_onset_map)
 ```
 
-Convert numeric date back to POSIXct format
-```{r}
-as.POSIXct(terra::values(epidemic_onset_map)[120:130],
-           tz = "UTC",
-           origin = "1970-01-01")
+Convert numeric date back to POSIXct format  
+
+```{r date_extraction}
+onset_dates <- as.POSIXct(terra::values(epidemic_onset_map),
+                          tz = "UTC",
+                          origin = "1970-01-01")
 ```
+
+
+## Plot date values  
+
+```{r rectrangle}
+# convert to a data.table
+dtdate <- data.table(pixel = seq_along(onset_dates),
+                     ODates = as.IDate(onset_dates))
+
+# Summarise the range of epidemic onset dates
+summary(onset_dates[is.na(onset_dates)== FALSE])
+
+# Plot dates on boxplot
+dtdate[is.na(ODates) == FALSE,] |>
+ggplot(aes(y=ODates))+
+  geom_boxplot()
+```
+
 

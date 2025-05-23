@@ -4,7 +4,7 @@
 \alias{calc_DIV}
 \title{Calculate daily infection values}
 \usage{
-calc_DIV(date_time, Tm, RH, rain, dat)
+calc_DIV(date_time, Tm, RH, rain, dat, rh_threshold = 70)
 }
 \arguments{
 \item{date_time}{POSIX_ct, date time the weather recording was taken}
@@ -18,6 +18,9 @@ calc_DIV(date_time, Tm, RH, rain, dat)
 
 \item{dat}{data.frame, containing column names "times","temp","rh","rain" with
 each of the respective arguments for input. provided as a convenience}
+
+\item{rh_threshold}{numeric relative humidity threshold for what meets the
+moisture threshold, default is 70\%}
 }
 \value{
 data.table, with probability of infection for each day, between 0 and 1

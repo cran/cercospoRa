@@ -1,3 +1,25 @@
+# cercospoRa 0.0.2
+
+## Bug fixes  
+  - fix variable assignment bug, see issue #41  
+
+## Minor improvements  
+  - Improved estimations of cultivar susceptibility on epidemic onset date 
+  issue #38 and #42  
+  - relative humidity thresholds are now a variable on `calc_epidemic_onset()` 
+  #40  
+  - Argument in `calc_epidemic_onset_from_image()` `cc_r` changed from `c_closure`
+  This is for clarity as the function calc_epidemic_onset has the same argument
+  which expects a different input to `calc_epidemic_onset_from_image()`  
+  
+## Documentation improvements
+  - Clarify cultivar susceptibility references and bsa index.  
+  - Update README  
+  - Add spelling package to suggests  
+  - Corrected unit tests  
+  - Expand vignette to look at range of pixelwise epidemic onsets.  
+  - Formatting and grammar improvements  
+  
 # cercospoRa 0.0.1
 
 

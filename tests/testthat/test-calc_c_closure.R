@@ -39,13 +39,13 @@ test_that("growth rate is calculated correctly",{
 
 test_that("canopy closure is calculated correctly",{
 
-  c_closure <- calc_c_closure(param_rxt,
+  cc <- calc_c_closure(param_rxt,
                               x1 = 1.3,
                               k = 6)
 
-  expect_s4_class(c_closure,"SpatRaster")
-  expect_equal(dim(c_closure), c(17,29,1))
-  expect_equal(terra::minmax(c_closure),
+  expect_s4_class(cc,"SpatRaster")
+  expect_equal(dim(cc), c(17,29,1))
+  expect_equal(terra::minmax(cc),
                matrix(round(c(19093.5833, 19192.5833)),dimnames = list(c("min", "max"), "2022-06-14")))
 
 

@@ -7,6 +7,9 @@ knitr::opts_chunk$set(
 ## ----setup--------------------------------------------------------------------
 library(cercospoRa)
 library(data.table)
+library(terra)
+library(sf)
+library(ggplot2)
 
 ## ----prep_wdata---------------------------------------------------------------
 # classify to data.table
@@ -31,10 +34,6 @@ wthr <- wthr[Datum < as.POSIXct("2022-10-01")]
 # set NA wind speed values to zero
 wthr[is.na(WG200), WG200 := 0]
 
-# set NA wind direction values to 20 degrees. 
-#  Wind is not important for this model
-wthr[is.na(WR200),WR200 := 20]
-
 ## ----format_wdata-------------------------------------------------------------
 wthr <- format_weather(wthr,
                          POSIXct_time = "Time",
@@ -56,8 +55,9 @@ wthr <- format_weather(wthr,
 ## -----------------------------------------------------------------------------
 cercospoRa::calc_epidemic_onset(start = as.POSIXct("2022-04-25",tz = "UTC"),
                     end = as.POSIXct("2022-09-30",tz = "UTC"),
-                    c_closure = as.POSIXct("2022-07-01",tz = "UTC"),
-                    weather = wthr)
+                    c_closure = as.POSIXct("2022-07-30",tz = "UTC"),
+                    weather = wthr,
+                    cultivar_sus = 6)
 
 ## -----------------------------------------------------------------------------
 # Get file location of example rasters with LAI values
@@ -72,7 +72,7 @@ epidemic_onset_param <-
                                                   tz = "UTC"),
                            target_res = 10)
 
-epidemic_onset_param
+terra::plot(epidemic_onset_param)
 
 ## -----------------------------------------------------------------------------
 param_rxt <- calc_r_x0(epidemic_onset_param,
@@ -84,20 +84,35 @@ param_rxt <- calc_r_x0(epidemic_onset_param,
 canopy_closure <- calc_c_closure(param_rxt,
                                  x1 = 1.3,
                                  k=6)
+terra::plot(canopy_closure)
 
 ## -----------------------------------------------------------------------------
 epidemic_onset_map <- 
   calc_epidemic_onset_from_image(start =as.POSIXct("2022-04-25",tz = "UTC"),
                                  end = as.POSIXct("2022-09-30",tz = "UTC"),
-                                 c_closure = canopy_closure,
-                                 weather = wthr)
+                                 cc_r = canopy_closure,
+                                 weather = wthr,
+                                 cultivar_sus = 6)
 epidemic_onset_map
 
 ## -----------------------------------------------------------------------------
 terra::plot(epidemic_onset_map)
 
-## -----------------------------------------------------------------------------
-as.POSIXct(terra::values(epidemic_onset_map)[120:130],
-           tz = "UTC",
-           origin = "1970-01-01")
+## ----date_extraction----------------------------------------------------------
+onset_dates <- as.POSIXct(terra::values(epidemic_onset_map),
+                          tz = "UTC",
+                          origin = "1970-01-01")
+
+## ----rectrangle---------------------------------------------------------------
+# convert to a data.table
+dtdate <- data.table(pixel = seq_along(onset_dates),
+                     ODates = as.IDate(onset_dates))
+
+# Summarise the range of epidemic onset dates
+summary(onset_dates[is.na(onset_dates)== FALSE])
+
+# Plot dates on boxplot
+dtdate[is.na(ODates) == FALSE,] |>
+ggplot(aes(y=ODates))+
+  geom_boxplot()
 

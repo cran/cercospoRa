@@ -20,9 +20,9 @@ equal to or larger than the actual resolution of the images expressed in
 meters.}
 }
 \value{
-\code{SpatRast} with a layer for each input layer. Each layer
-contains is named according to the \code{img_dates}. The output
-\code{SpatRast} is suitable for input in \code{calc_r_x0()}
+\CRANpkg{terra}::\code{SpatRast} with a layer for each input layer. Each layer
+is named according to the \code{img_dates}.
+The output \code{SpatRast} is suitable for input in \code{calc_r_x0()}
 }
 \description{
 Read LAI images at several time points
